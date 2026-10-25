@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Bureau</title>
+    <style>
+        :root {
+            --md-surface: #121212;
+            --md-surface-container: #1e1e1e;
+            --md-surface-container-high: #2a2a2a;
+            --md-surface-container-highest: #333333;
+            --md-on-surface: #e3e3e3;
+            --md-on-surface-variant: #cac4d0;
+            --md-primary: #a8c7fa;
+            --md-primary-container: #24437c;
+            --md-on-primary-container: #dce3f8;
+            --md-secondary: #c4b5fd;
+            --md-secondary-container: #4a3d8f;
+            --md-outline: #938f99;
+            --md-outline-variant: #49454f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Roboto', -apple-system, sans-serif;
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .clock {
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--md-primary);
+            letter-spacing: -1px;
+        }
+
+        .greeting {
+            font-size: 1.2rem;
+            color: var(--md-on-surface-variant);
+            margin-top: 8px;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 560px;
+            margin-bottom: 40px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 28px;
+            border: none;
+            background: var(--md-surface-container);
+            color: var(--md-on-surface);
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-bar input:focus {
+            box-shadow: 0 0 0 2px var(--md-primary);
+        }
+
+        .search-bar input::placeholder {
+            color: var(--md-on-surface-variant);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .card {
+            background: var(--md-surface-container);
+            border-radius: 24px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--md-on-surface);
+            transition: background 0.2s, transform 0.15s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            background: var(--md-surface-container-high);
+            transform: scale(1.03);
+        }
+
+        .card:active {
+            transform: scale(0.98);
+            background: var(--md-surface-container-highest);
+        }
+
+        .icon-wrapper {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .icon-wrapper img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .card-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            color: var(--md-on-surface);
+        }
+
+        .section-title {
+            width: 100%;
+            max-width: 900px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--md-on-surface-variant);
+            margin-bottom: 16px;
+            padding-left: 8px;
+        }
+
+        .section-title:not(:first-of-type) {
+            margin-top: 32px;
+        }
+
+        /* Icon backgrounds per brand */
+        .bg-github { background: #333; }
+        .bg-proton { background: #6d4aff; }
+        .bg-gmail { background: #ea4335; }
+        .bg-youtube { background: #ff0000; }
+        .bg-x { background: #000; border: 1px solid #333; }
+        .bg-translate { background: #4285f4; }
+        .bg-maps { background: #34a853; }
+        .bg-wikipedia { background: #636466; }
+        .bg-reddit { background: #ff4500; }
+        .bg-spotify { background: #1db954; }
+        .bg-netflix { background: #e50914; }
+        .bg-amazon { background: #ff9900; }
+        .bg-google { background: #4285f4; }
+        .bg-drive { background: #0f9d58; }
+        .bg-calendar { background: #4285f4; }
+        .bg-twitch { background: #9146ff; }
+        .bg-discord { background: #5865f2; }
+        .bg-telegram { background: #0088cc; }
+        .bg-whatsapp { background: #25d366; }
+        .bg-linkedin { background: #0a66c2; }
+        .bg-notion { background: #fff; }
+        .bg-figma { background: #f24e1e; }
+        .bg-stackoverflow { background: #f48024; }
+        .bg-mit { background: #a32025; }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 12px;
+            }
+            .card {
+                padding: 18px 12px;
+                border-radius: 20px;
+            }
+            .icon-wrapper {
+                width: 48px;
+                height: 48px;
+            }
+            .clock {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="clock" id="clock">--:--</div>
+        <div class="greeting" id="greeting">Bienvenue</div>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Rechercher ou saisir une URL..." autofocus>
+    </div>
+
+    <div class="section-title">Communication</div>
+    <div class="grid">
+        <a href="https://mail.proton.me" target="_blank" class="card">
+            <div class="icon-wrapper bg-proton">
+                <img src="https://www.google.com/s2/favicons?domain=proton.me&sz=64" alt="ProtonMail">
+            </div>
+            <span class="card-label">ProtonMail</span>
+        </a>
+        <a href="https://mail.google.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-gmail">
+                <img src="https://www.google.com/s2/favicons?domain=gmail.com&sz=64" alt="Gmail">
+            </div>
+            <span class="card-label">Gmail</span>
+        </a>
+        <a href="https://x.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-x">
+                <img src="https://www.google.com/s2/favicons?domain=x.com&sz=64" alt="X">
+            </div>
+            <span class="card-label">X</span>
+        </a>
+        <a href="https://discord.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-discord">
+                <img src="https://www.google.com/s2/favicons?domain=discord.com&sz=64" alt="Discord">
+            </div>
+            <span class="card-label">Discord</span>
+        </a>
+        <a href="https://telegram.org" target="_blank" class="card">
+            <div class="icon-wrapper bg-telegram">
+                <img src="https://www.google.com/s2/favicons?domain=telegram.org&sz=64" alt="Telegram">
+            </div>
+            <span class="card-label">Telegram</span>
+        </a>
+        <a href="https://web.whatsapp.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-whatsapp">
+                <img src="https://www.google.com/s2/favicons?domain=whatsapp.com&sz=64" alt="WhatsApp">
+            </div>
+            <span class="card-label">WhatsApp</span>
+        </a>
+    </div>
+
+    <div class="section-title">Développement</div>
+    <div class="grid">
+        <a href="https://github.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-github">
+                <img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="GitHub">
+            </div>
+            <span class="card-label">GitHub</span>
+        </a>
+        <a href="https://stackoverflow.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-stackoverflow">
+                <img src="https://www.google.com/s2/favicons?domain=stackoverflow.com&sz=64" alt="Stack Overflow">
+            </div>
+            <span class="card-label">Stack Overflow</span>
+        </a>
+        <a href="https://figma.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-figma">
+                <img src="https://www.google.com/s2/favicons?domain=figma.com&sz=64" alt="Figma">
+            </div>
+            <span class="card-label">Figma</span>
+        </a>
+        <a href="https://notion.so" target="_blank" class="card">
+            <div class="icon-wrapper bg-notion">
+                <img src="https://www.google.com/s2/favicons?domain=notion.so&sz=64" alt="Notion">
+            </div>
+            <span class="card-label">Notion</span>
+        </a>
+    </div>
+
+    <div class="section-title">Médias & Divertissement</div>
+    <div class="grid">
+        <a href="https://youtube.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-youtube">
+                <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=64" alt="YouTube">
+            </div>
+            <span class="card-label">YouTube</span>
+        </a>
+        <a href="https://spotify.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-spotify">
+                <img src="https://www.google.com/s2/favicons?domain=spotify.com&sz=64" alt="Spotify">
+            </div>
+            <span class="card-label">Spotify</span>
+        </a>
+        <a href="https://netflix.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-netflix">
+                <img src="https://www.google.com/s2/favicons?domain=netflix.com&sz=64" alt="Netflix">
+            </div>
+            <span class="card-label">Netflix</span>
+        </a>
+        <a href="https://twitch.tv" target="_blank" class="card">
+            <div class="icon-wrapper bg-twitch">
+                <img src="https://www.google.com/s2/favicons?domain=twitch.tv&sz=64" alt="Twitch">
+            </div>
+            <span class="card-label">Twitch</span>
+        </a>
+    </div>
+
+    <div class="section-title">Outils & Services</div>
+    <div class="grid">
+        <a href="https://translate.google.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-translate">
+                <img src="https://www.google.com/s2/favicons?domain=translate.google.com&sz=64" alt="Traduire">
+            </div>
+            <span class="card-label">Traduire</span>
+        </a>
+        <a href="https://maps.google.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-maps">
+                <img src="https://www.google.com/s2/favicons?domain=maps.google.com&sz=64" alt="Maps">
+            </div>
+            <span class="card-label">Maps</span>
+        </a>
+        <a href="https://drive.google.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-drive">
+                <img src="https://www.google.com/s2/favicons?domain=drive.google.com&sz=64" alt="Drive">
+            </div>
+            <span class="card-label">Drive</span>
+        </a>
+        <a href="https://calendar.google.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-calendar">
+                <img src="https://www.google.com/s2/favicons?domain=calendar.google.com&sz=64" alt="Agenda">
+            </div>
+            <span class="card-label">Agenda</span>
+        </a>
+        <a href="https://wikipedia.org" target="_blank" class="card">
+            <div class="icon-wrapper bg-wikipedia">
+                <img src="https://www.google.com/s2/favicons?domain=wikipedia.org&sz=64" alt="Wikipédia">
+            </div>
+            <span class="card-label">Wikipédia</span>
+        </a>
+        <a href="https://reddit.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-reddit">
+                <img src="https://www.google.com/s2/favicons?domain=reddit.com&sz=64" alt="Reddit">
+            </div>
+            <span class="card-label">Reddit</span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" class="card">
+            <div class="icon-wrapper bg-linkedin">
+                <img src="https://www.google.com/s2/favicons?domain=linkedin.com&sz=64" alt="LinkedIn">
+            </div>
+            <span class="card-label">LinkedIn</span>
+        </a>
+        <a href="https://amazon.fr" target="_blank" class="card">
+            <div class="icon-wrapper bg-amazon">
+                <img src="https://www.google.com/s2/favicons?domain=amazon.fr&sz=64" alt="Amazon">
+            </div>
+            <span class="card-label">Amazon</span>
+        </a>
+    </div>
+
+    <script>
+        // Horloge
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${h}:${m}`;
+
+            const hour = now.getHours();
+            let greeting;
+            if (hour < 6) greeting = 'Bonne nuit';
+            else if (hour < 12) greeting = 'Bonjour';
+            else if (hour < 18) greeting = 'Bon après-midi';
+            else greeting = 'Bonsoir';
+            document.getElementById('greeting').textContent = greeting;
+        }
+        updateClock();
+        setInterval(updateClock, 10000);
+
+        // Barre de recherche → Google
+        document.getElementById('search').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const q = this.value.trim();
+                if (q) {
+                    const url = q.startsWith('http') || q.includes('.') 
+                        ? q 
+                        : `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+                    window.open(url, '_blank');
+                    this.value = '';
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
